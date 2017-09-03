@@ -21,11 +21,13 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("::", a.to_s)
     assert_equal("0000:0000:0000:0000:0000:0000:0000:0000", a.to_string)
     assert_equal(Socket::AF_INET6, a.family)
+    assert_equal(128, a.prefix)
 
     a = IPAddr.new("0123:4567:89ab:cdef:0ABC:DEF0:1234:5678")
     assert_equal("123:4567:89ab:cdef:abc:def0:1234:5678", a.to_s)
     assert_equal("0123:4567:89ab:cdef:0abc:def0:1234:5678", a.to_string)
     assert_equal(Socket::AF_INET6, a.family)
+    assert_equal(128, a.prefix)
 
     a = IPAddr.new("3ffe:505:2::/48")
     assert_equal("3ffe:505:2::", a.to_s)
@@ -34,16 +36,19 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal(false, a.ipv4?)
     assert_equal(true, a.ipv6?)
     assert_equal("#<IPAddr: IPv6:3ffe:0505:0002:0000:0000:0000:0000:0000/ffff:ffff:ffff:0000:0000:0000:0000:0000>", a.inspect)
+    assert_equal(48, a.prefix)
 
     a = IPAddr.new("3ffe:505:2::/ffff:ffff:ffff::")
     assert_equal("3ffe:505:2::", a.to_s)
     assert_equal("3ffe:0505:0002:0000:0000:0000:0000:0000", a.to_string)
     assert_equal(Socket::AF_INET6, a.family)
+    assert_equal(48, a.prefix)
 
     a = IPAddr.new("0.0.0.0")
     assert_equal("0.0.0.0", a.to_s)
     assert_equal("0.0.0.0", a.to_string)
     assert_equal(Socket::AF_INET, a.family)
+    assert_equal(32, a.prefix)
 
     a = IPAddr.new("192.168.1.2")
     assert_equal("192.168.1.2", a.to_s)
@@ -51,17 +56,27 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal(Socket::AF_INET, a.family)
     assert_equal(true, a.ipv4?)
     assert_equal(false, a.ipv6?)
+    assert_equal(32, a.prefix)
 
-    a = IPAddr.new("192.168.1.2/24")
+    a = IPAddr.new("192.168.1.2/26")
     assert_equal("192.168.1.0", a.to_s)
     assert_equal("192.168.1.0", a.to_string)
     assert_equal(Socket::AF_INET, a.family)
-    assert_equal("#<IPAddr: IPv4:192.168.1.0/255.255.255.0>", a.inspect)
+    assert_equal("#<IPAddr: IPv4:192.168.1.0/255.255.255.192>", a.inspect)
+    assert_equal(26, a.prefix)
 
     a = IPAddr.new("192.168.1.2/255.255.255.0")
     assert_equal("192.168.1.0", a.to_s)
     assert_equal("192.168.1.0", a.to_string)
     assert_equal(Socket::AF_INET, a.family)
+    assert_equal(24, a.prefix)
+
+    (0..32).each do |prefix|
+      assert_equal(prefix, IPAddr.new("10.20.30.40/#{prefix}").prefix)
+    end
+    (0..128).each do |prefix|
+      assert_equal(prefix, IPAddr.new("1:2:3:4:5:6:7:8/#{prefix}").prefix)
+    end
 
     assert_equal("0:0:0:1::", IPAddr.new("0:0:0:1::").to_s)
     assert_equal("2001:200:300::", IPAddr.new("2001:200:300::/48").to_s)
@@ -151,6 +166,27 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_raise(IPAddr::InvalidAddressError) {
       IPAddr.new("192.168.2.1").ip6_int
     }
+  end
+
+  def test_prefix_writer
+    a = IPAddr.new("192.168.1.2")
+    ["1", "255.255.255.0", "ffff:ffff:ffff:ffff::", nil, 1.0, -1, 33].each { |x|
+      assert_raise(IPAddr::InvalidPrefixError) { a.prefix = x }
+    }
+    a = IPAddr.new("1:2:3:4:5:6:7:8")
+    ["1", "255.255.255.0", "ffff:ffff:ffff:ffff::", nil, 1.0, -1, 129].each { |x|
+      assert_raise(IPAddr::InvalidPrefixError) { a.prefix = x }
+    }
+
+    a = IPAddr.new("192.168.1.2")
+    a.prefix = 26
+    assert_equal(26, a.prefix)
+    assert_equal("192.168.1.0", a.to_s)
+
+    a = IPAddr.new("1:2:3:4:5:6:7:8")
+    a.prefix = 52
+    assert_equal(52, a.prefix)
+    assert_equal("1:2:3::", a.to_s)
   end
 
   def test_to_s
