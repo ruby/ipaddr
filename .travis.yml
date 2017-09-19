@@ -5,4 +5,10 @@ rvm:
   - ruby-head
   - jruby
   - jruby-head
+matrix:
+  allow_failures:
+  # Even `rvm use jruby` does not work reliably on Travis:
+  # https://travis-ci.org/ruby/ipaddr/jobs/277222999
+  - rvm: jruby
+  - rvm: jruby-head
 before_install: gem install bundler
