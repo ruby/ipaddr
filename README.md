@@ -5,7 +5,12 @@ IPv4 and IPv6 are supported.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+This library is part of the standard ruby distribution as default gem
+and synchronized periodically, but you can explicitly depend on this
+gem with version constraints as necessary, like when you need a newer
+version than comes with older versions of ruby.
+
+For example, you can add this line to your application's Gemfile:
 
 ```ruby
 gem 'ipaddr'
@@ -38,6 +43,13 @@ ipaddr3 = IPAddr.new "192.168.2.0/24"
 
 p ipaddr3                   #=> #<IPAddr: IPv4:192.168.2.0/255.255.255.0>
 ```
+
+## Alternative
+
+The [ipaddress](https://rubygems.org/gems/ipaddress) gem is a popular,
+extensive library for manipulating IP addresses with a layer of
+compatibility with `ipaddr`.  If you need a richer set of features
+than `ipaddr` has, try this library instead.
 
 ## Development
 
