@@ -371,6 +371,35 @@ class IPAddr
     return clone.set(begin_addr, @family)..clone.set(end_addr, @family)
   end
 
+  # Returns the prefix length in bits for the ipaddr.
+  def prefix
+    case @family
+    when Socket::AF_INET
+      n = IN4MASK ^ @mask_addr
+      i = 32
+    when Socket::AF_INET6
+      n = IN6MASK ^ @mask_addr
+      i = 128
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+    while n.positive?
+      n >>= 1
+      i -= 1
+    end
+    i
+  end
+
+  # Sets the prefix length in bits
+  def prefix=(prefix)
+    case prefix
+    when Integer
+      mask!(prefix)
+    else
+      raise InvalidPrefixError, "prefix must be an integer"
+    end
+  end
+
   # Returns a string containing a human-readable representation of the
   # ipaddr. ("#<IPAddr: family:address/mask>")
   def inspect
@@ -413,7 +442,8 @@ class IPAddr
 
   # Set current netmask to given mask.
   def mask!(mask)
-    if mask.kind_of?(String)
+    case mask
+    when String
       if mask =~ /\A\d+\z/
         prefixlen = mask.to_i
       else
