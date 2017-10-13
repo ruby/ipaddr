@@ -3,12 +3,16 @@ language: ruby
 rvm:
   - 2.4
   - ruby-head
-  - jruby
-  - jruby-head
 matrix:
+  include:
+    - rvm: jruby-9.1.13.0
+      jdk: openjdk8
+    - rvm: jruby-9.1.13.0
+      jdk: oraclejdk8
+    - rvm: jruby-head
+      jdk: openjdk8
+    - rvm: jruby-head
+      jdk: oraclejdk8
   allow_failures:
-  # Even `rvm use jruby` does not work reliably on Travis:
-  # https://travis-ci.org/ruby/ipaddr/jobs/277222999
-  - rvm: jruby
-  - rvm: jruby-head
+    - rvm: jruby-head
 before_install: gem install bundler
