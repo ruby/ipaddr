@@ -338,6 +338,23 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(false, IPAddr.new('fe84:8bf7:e905::1').private?)
   end
 
+  def test_link_local?
+    assert_equal(false, IPAddr.new('0.0.0.0').link_local?)
+    assert_equal(false, IPAddr.new('127.0.0.1').link_local?)
+    assert_equal(false, IPAddr.new('10.0.0.0').link_local?)
+    assert_equal(false, IPAddr.new('172.16.0.0').link_local?)
+    assert_equal(false, IPAddr.new('192.168.0.0').link_local?)
+
+    assert_equal(true,  IPAddr.new('169.254.1.1').link_local?)
+    assert_equal(true,  IPAddr.new('169.254.254.255').link_local?)
+
+    assert_equal(false, IPAddr.new('::1').link_local?)
+    assert_equal(false, IPAddr.new('::').link_local?)
+    assert_equal(false, IPAddr.new('fb84:8bf7:e905::1').link_local?)
+
+    assert_equal(true,  IPAddr.new('fe80::dead:beef:cafe:1234').link_local?)
+  end
+
   def test_hash
     a1 = IPAddr.new('192.168.2.0')
     a2 = IPAddr.new('192.168.2.0')

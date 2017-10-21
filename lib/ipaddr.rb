@@ -288,6 +288,21 @@ class IPAddr
     end
   end
 
+  # Returns true if the ipaddr is a link-local address.  IPv4
+  # addresses in 169.254.0.0/16 reserved by RFC 3927 and Link-Local
+  # IPv6 Unicast Addresses in fe80::/10 reserved by RFC 4291 are
+  # considered link-local.
+  def link_local?
+    case @family
+    when Socket::AF_INET
+      @addr & 0xffff0000 == 0xa9fe0000 # 169.254.0.0/16
+    when Socket::AF_INET6
+      @addr & 0xffc0_0000_0000_0000_0000_0000_0000_0000 == 0xfe80_0000_0000_0000_0000_0000_0000_0000
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+  end
+
   # Returns true if the ipaddr is an IPv4-mapped IPv6 address.
   def ipv4_mapped?
     return ipv6? && (@addr >> 32) == 0xffff
