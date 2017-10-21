@@ -13,7 +13,7 @@ version than comes with older versions of ruby.
 For example, you can add this line to your application's Gemfile:
 
 ```ruby
-gem 'ipaddr', '~> 1.1'
+gem 'ipaddr', '~> 1.2'
 ```
 
 And then execute:
