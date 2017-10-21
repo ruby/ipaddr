@@ -308,6 +308,36 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(false, IPAddr.new('3ffe:505:2::1').loopback?)
   end
 
+  def test_private?
+    assert_equal(false, IPAddr.new('0.0.0.0').private?)
+    assert_equal(false, IPAddr.new('127.0.0.1').private?)
+
+    assert_equal(false, IPAddr.new('8.8.8.8').private?)
+    assert_equal(true,  IPAddr.new('10.0.0.0').private?)
+    assert_equal(true,  IPAddr.new('10.255.255.255').private?)
+    assert_equal(false, IPAddr.new('11.255.1.1').private?)
+
+    assert_equal(false, IPAddr.new('172.15.255.255').private?)
+    assert_equal(true,  IPAddr.new('172.16.0.0').private?)
+    assert_equal(true,  IPAddr.new('172.31.255.255').private?)
+    assert_equal(false, IPAddr.new('172.32.0.0').private?)
+
+    assert_equal(false, IPAddr.new('190.168.0.0').private?)
+    assert_equal(true,  IPAddr.new('192.168.0.0').private?)
+    assert_equal(true,  IPAddr.new('192.168.255.255').private?)
+    assert_equal(false, IPAddr.new('192.169.0.0').private?)
+
+    assert_equal(false, IPAddr.new('169.254.0.1').private?)
+
+    assert_equal(false, IPAddr.new('::1').private?)
+    assert_equal(false, IPAddr.new('::').private?)
+
+    assert_equal(false, IPAddr.new('fb84:8bf7:e905::1').private?)
+    assert_equal(true,  IPAddr.new('fc84:8bf7:e905::1').private?)
+    assert_equal(true,  IPAddr.new('fd84:8bf7:e905::1').private?)
+    assert_equal(false, IPAddr.new('fe84:8bf7:e905::1').private?)
+  end
+
   def test_hash
     a1 = IPAddr.new('192.168.2.0')
     a2 = IPAddr.new('192.168.2.0')

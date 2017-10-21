@@ -271,6 +271,23 @@ class IPAddr
     end
   end
 
+  # Returns true if the ipaddr is a private address.  IPv4 addresses
+  # in 10.0.0.0/8, 172.16.0.0/12 and 192.168.0.0/16 as defined in RFC
+  # 1918 and IPv6 Unique Local Addresses in fc00::/7 as defined in RFC
+  # 4193 are considered private.
+  def private?
+    case @family
+    when Socket::AF_INET
+      @addr & 0xff000000 == 0x0a000000 ||    # 10.0.0.0/8
+        @addr & 0xfff00000 == 0xac100000 ||  # 172.16.0.0/12
+        @addr & 0xffff0000 == 0xc0a80000     # 192.168.0.0/16
+    when Socket::AF_INET6
+      @addr & 0xfe00_0000_0000_0000_0000_0000_0000_0000 == 0xfc00_0000_0000_0000_0000_0000_0000_0000
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+  end
+
   # Returns true if the ipaddr is an IPv4-mapped IPv6 address.
   def ipv4_mapped?
     return ipv6? && (@addr >> 32) == 0xffff
