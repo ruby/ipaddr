@@ -259,6 +259,18 @@ class IPAddr
     return @family == Socket::AF_INET6
   end
 
+  # Returns true if the ipaddr is a loopback address.
+  def loopback?
+    case @family
+    when Socket::AF_INET
+      @addr & 0xff000000 == 0x7f000000
+    when Socket::AF_INET6
+      @addr == 1
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+  end
+
   # Returns true if the ipaddr is an IPv4-mapped IPv6 address.
   def ipv4_mapped?
     return ipv6? && (@addr >> 32) == 0xffff

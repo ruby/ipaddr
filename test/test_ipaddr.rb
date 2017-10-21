@@ -297,6 +297,17 @@ class TC_Operator < Test::Unit::TestCase
 
   end
 
+  def test_loopback?
+    assert_equal(true,  IPAddr.new('127.0.0.1').loopback?)
+    assert_equal(true,  IPAddr.new('127.127.1.1').loopback?)
+    assert_equal(false, IPAddr.new('0.0.0.0').loopback?)
+    assert_equal(false, IPAddr.new('192.168.2.0').loopback?)
+    assert_equal(false, IPAddr.new('255.0.0.0').loopback?)
+    assert_equal(true,  IPAddr.new('::1').loopback?)
+    assert_equal(false, IPAddr.new('::').loopback?)
+    assert_equal(false, IPAddr.new('3ffe:505:2::1').loopback?)
+  end
+
   def test_hash
     a1 = IPAddr.new('192.168.2.0')
     a2 = IPAddr.new('192.168.2.0')
