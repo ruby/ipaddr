@@ -460,6 +460,10 @@ class IPAddr
           raise InvalidPrefixError, "address family is not same"
         end
         @mask_addr = m.to_i
+        n = @mask_addr ^ m.instance_variable_get(:@mask_addr)
+        unless ((n + 1) & n).zero?
+          raise InvalidPrefixError, "invalid mask #{mask}"
+        end
         @addr &= @mask_addr
         return self
       end
