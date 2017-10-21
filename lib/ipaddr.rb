@@ -266,12 +266,19 @@ class IPAddr
 
   # Returns true if the ipaddr is an IPv4-compatible IPv6 address.
   def ipv4_compat?
+    warn "#{caller(1)[0]}: warning: IPAddr\##{__callee__} is obsolete" if $VERBOSE
+    _ipv4_compat?
+  end
+
+  def _ipv4_compat?
     if !ipv6? || (@addr >> 32) != 0
       return false
     end
     a = (@addr & IN4MASK)
     return a != 0 && a != 1
   end
+
+  private :_ipv4_compat?
 
   # Returns a new ipaddr built by converting the native IPv4 address
   # into an IPv4-mapped IPv6 address.
@@ -285,6 +292,7 @@ class IPAddr
   # Returns a new ipaddr built by converting the native IPv4 address
   # into an IPv4-compatible IPv6 address.
   def ipv4_compat
+    warn "#{caller(1)[0]}: warning: IPAddr\##{__callee__} is obsolete" if $VERBOSE
     if !ipv4?
       raise InvalidAddressError, "not an IPv4 address"
     end
@@ -295,7 +303,7 @@ class IPAddr
   # native IPv4 address.  If the IP address is not an IPv4-mapped or
   # IPv4-compatible IPv6 address, returns self.
   def native
-    if !ipv4_mapped? && !ipv4_compat?
+    if !ipv4_mapped? && !_ipv4_compat?
       return self
     end
     return self.clone.set(@addr & IN4MASK, Socket::AF_INET)
