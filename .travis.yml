@@ -1,7 +1,9 @@
 sudo: false
 language: ruby
 rvm:
+  - 2.3
   - 2.4
+  - 2.5.0
   - ruby-head
   - jruby
   - jruby-head
@@ -9,6 +11,7 @@ matrix:
   allow_failures:
   # Even `rvm use jruby` does not work reliably on Travis:
   # https://travis-ci.org/ruby/ipaddr/jobs/277222999
+  - rvm: ruby-head
   - rvm: jruby
   - rvm: jruby-head
 before_install: gem install bundler
