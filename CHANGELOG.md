@@ -1,3 +1,8 @@
+1.2.2
+-----
+
+- Include the input in the message when raising InvalidAddressError [Feature #5987] (https://bugs.ruby-lang.org/issues/5987)
+
 1.2.1
 -----
 
