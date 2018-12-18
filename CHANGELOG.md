@@ -1,3 +1,8 @@
+1.2.1
+-----
+
+- Enable frozen_string_literal and do a bit of code cleanup
+
 1.2.0
 -----
 
