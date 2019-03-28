@@ -1,3 +1,5 @@
+- Change IPv4 address parsing to recognize shorthand addresses, like [inet_aton](https://linux.die.net/man/3/inet_aton) does. [Feature #15734](https://bugs.ruby-lang.org/issues/15734)
+
 1.2.2
 -----
 
