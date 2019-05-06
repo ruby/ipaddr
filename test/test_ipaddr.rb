@@ -85,18 +85,25 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("1:2:3:4:5:6:7:0", IPAddr.new("1:2:3:4:5:6:7::").to_s)
     assert_equal("0:2:3:4:5:6:7:8", IPAddr.new("::2:3:4:5:6:7:8").to_s)
 
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.256") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.011") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("fe80::1%fxp0") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[192.168.1.2]/120") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[2001:200:300::]\nINVALID") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.1/32\nINVALID") }
-    assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("::1/255.255.255.0") }
-    assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("::1/129") }
-    assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("192.168.0.1/33") }
-    assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("192.168.0.1/255.255.255.1") }
-    assert_raise(IPAddr::AddressFamilyError) { IPAddr.new(1) }
-    assert_raise(IPAddr::AddressFamilyError) { IPAddr.new("::ffff:192.168.1.2/120", Socket::AF_INET) }
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "192.168.0.256")
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "192.168.0.011")
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "fe80::1%fxp0")
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "[192.168.1.2]/120")
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "[2001:200:300::]\nINVALID")
+    assert_invalid_ipaddr(IPAddr::InvalidAddressError, "192.168.0.1/32\nINVALID")
+    assert_invalid_ipaddr(IPAddr::InvalidPrefixError, "::1/255.255.255.0")
+    assert_invalid_ipaddr(IPAddr::InvalidPrefixError, "::1/129")
+    assert_invalid_ipaddr(IPAddr::InvalidPrefixError, "192.168.0.1/33")
+    assert_invalid_ipaddr(IPAddr::InvalidPrefixError, "192.168.0.1/255.255.255.1")
+    assert_invalid_ipaddr(IPAddr::AddressFamilyError, 1)
+    assert_invalid_ipaddr(IPAddr::AddressFamilyError, "::ffff:192.168.1.2/120", Socket::AF_INET)
+  end
+
+  private def assert_invalid_ipaddr(exc, addr, *opts)
+    e = assert_raise(exc) { IPAddr.new(addr, *opts) }
+    if cause = e.cause and cause.class == exc
+      assert_not_send([e.message, :start_with?, cause.message])
+    end
   end
 
   def test_s_new_ntoh

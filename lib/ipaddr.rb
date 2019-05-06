@@ -595,7 +595,7 @@ class IPAddr
       @mask_addr = (@family == Socket::AF_INET) ? IN4MASK : IN6MASK
     end
   rescue InvalidAddressError => e
-    raise e.class, "#{e.message}: #{addr}"
+    raise e.class, "#{e.message}: #{addr}", e.backtrace, cause: nil
   end
 
   def coerce_other(other)
