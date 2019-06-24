@@ -129,11 +129,25 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("192.168.1.2", b.to_s)
     assert_equal(Socket::AF_INET, b.family)
     assert_equal(false, b.ipv4_compat?)
+    assert_equal(32, b.prefix)
+
+    a = IPAddr.new("::192.168.0.0/112")
+    b = a.native
+    assert_equal("192.168.0.0", b.to_s)
+    assert_equal(Socket::AF_INET, b.family)
+    assert_equal(16, b.prefix)
 
     a = IPAddr.new("192.168.1.2")
     b = a.ipv4_compat
     assert_equal("::192.168.1.2", b.to_s)
     assert_equal(Socket::AF_INET6, b.family)
+    assert_equal(128, b.prefix)
+
+    a = IPAddr.new("192.168.0.0/16")
+    b = a.ipv4_compat
+    assert_equal("::192.168.0.0", b.to_s)
+    assert_equal(Socket::AF_INET6, b.family)
+    assert_equal(112, b.prefix)
   end
 
   def test_ipv4_mapped
@@ -146,11 +160,25 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("192.168.1.2", b.to_s)
     assert_equal(Socket::AF_INET, b.family)
     assert_equal(false, b.ipv4_mapped?)
+    assert_equal(32, b.prefix)
+
+    a = IPAddr.new("::ffff:192.168.0.0/112")
+    b = a.native
+    assert_equal("192.168.0.0", b.to_s)
+    assert_equal(Socket::AF_INET, b.family)
+    assert_equal(16, b.prefix)
 
     a = IPAddr.new("192.168.1.2")
     b = a.ipv4_mapped
     assert_equal("::ffff:192.168.1.2", b.to_s)
     assert_equal(Socket::AF_INET6, b.family)
+    assert_equal(128, b.prefix)
+
+    a = IPAddr.new("192.168.0.0/16")
+    b = a.ipv4_mapped
+    assert_equal("::ffff:192.168.0.0", b.to_s)
+    assert_equal(Socket::AF_INET6, b.family)
+    assert_equal(112, b.prefix)
   end
 
   def test_reverse

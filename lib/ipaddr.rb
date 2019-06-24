@@ -478,9 +478,15 @@ class IPAddr
       if addr < 0 || addr > IN4MASK
         raise InvalidAddressError, "invalid address: #{@addr}"
       end
+      if @family == Socket::AF_INET6
+        mask = @mask_addr & IN4MASK
+      end
     when Socket::AF_INET6
       if addr < 0 || addr > IN6MASK
         raise InvalidAddressError, "invalid address: #{@addr}"
+      end
+      if @family == Socket::AF_INET
+        mask = (IN6MASK ^ IN4MASK) | @mask_addr
       end
     else
       raise AddressFamilyError, "unsupported address family"
@@ -488,6 +494,9 @@ class IPAddr
     @addr = addr
     if family[0]
       @family = family[0]
+    end
+    if mask
+      @mask_addr = mask
     end
     return self
   end
