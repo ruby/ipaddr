@@ -3,6 +3,8 @@
 IPAddr provides a set of methods to manipulate an IP address.  Both
 IPv4 and IPv6 are supported.
 
+[![Build Status](https://travis-ci.org/ruby/ipaddr.svg?branch=master)](https://travis-ci.org/ruby/ipaddr)
+
 ## Installation
 
 This library is part of the standard ruby distribution as default gem
