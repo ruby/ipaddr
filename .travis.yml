@@ -1,22 +1,14 @@
 sudo: false
 language: ruby
-rvm:
-  - 2.3
-  - 2.4
-  - 2.5
-  - 2.6
-  - ruby-head
+
 matrix:
   include:
-    - rvm: jruby-9.1.13.0
-      jdk: openjdk8
-    - rvm: jruby-9.1.13.0
-      jdk: oraclejdk8
-    - rvm: jruby-head
-      jdk: openjdk8
-    - rvm: jruby-head
-      jdk: oraclejdk8
+    - rvm: 2.3
+    - rvm: 2.4
+    - rvm: 2.5
+    - rvm: 2.6
+    - rvm: ruby-head
+    - rvm: jruby
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby-head
-before_install: gem install bundler
+    - rvm: jruby
