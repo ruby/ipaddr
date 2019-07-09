@@ -9,6 +9,8 @@ matrix:
     - rvm: 2.6
     - rvm: ruby-head
     - rvm: jruby
+    - rvm: truffleruby
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby
+    - rvm: truffleruby
