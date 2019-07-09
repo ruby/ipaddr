@@ -12,5 +12,3 @@ matrix:
     - rvm: truffleruby
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby
-    - rvm: truffleruby
