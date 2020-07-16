@@ -21,8 +21,4 @@ Both IPv4 and IPv6 are supported.
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = "~> 2.3"
-
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "test-unit"
 end
