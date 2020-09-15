@@ -422,4 +422,13 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(true, s.include?(a5))
     assert_equal(true, s.include?(a6))
   end
+
+  def test_unmasked
+    assert_equal(IPAddr.new("1.2.3.4"), IPAddr.new("1.2.3.4").unmasked)
+    assert_equal(IPAddr.new("1.2.3.4"), IPAddr.new("1.2.3.4/8").unmasked)
+    assert_equal(IPAddr.new("1:2::3"), IPAddr.new("1:2::3").unmasked)
+    assert_equal(IPAddr.new("1:2::3"), IPAddr.new("1:2::3/16").unmasked)
+    assert_equal(IPAddr.new("1.2.3.4"), IPAddr.new(IPAddr.new("1.2.3.4").to_i, Socket::AF_INET).unmasked)
+    assert_equal(IPAddr.new("1.2.3.5"), IPAddr.new("1.2.3.4").succ.mask(8).unmasked)
+  end
 end
