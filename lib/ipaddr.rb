@@ -46,7 +46,7 @@ class IPAddr
   # 128 bit mask for IPv6
   IN6MASK = 0xffffffffffffffffffffffffffffffff
   # Format string for IPv6
-  IN6FORMAT = (["%.4x"] * 8).join(':')
+  IN6FORMAT = (["%.4x"] * 8).join(':').freeze
 
   # Regexp _internally_ used for parsing IPv4 address.
   RE_IPV4ADDRLIKE = %r{
@@ -727,7 +727,7 @@ end
 unless Socket.const_defined? :AF_INET6
   class Socket < BasicSocket
     # IPv6 protocol family
-    AF_INET6 = Object.new
+    AF_INET6 = Object.new.freeze
   end
 
   class << IPSocket
