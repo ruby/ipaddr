@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'test/unit'
 require 'ipaddr'
+require_relative 'lib/helper'
 
 class TC_IPAddr < Test::Unit::TestCase
   def test_s_new
