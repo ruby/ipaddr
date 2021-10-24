@@ -1,3 +1,14 @@
+1.2.3
+-----
+
+- Ruby 2.3 is the minimum supported version
+- Follow the license change in Ruby and add BSD-2-Clause
+- Make the parser a bit stricter [Bug #15832](https://bugs.ruby-lang.org/issues/15832)
+  - Disallow leading zeros and extra slashes in mask
+- Make IPAddr#include? consider range of argument [Bug #14119](https://bugs.ruby-lang.org/issues/14119)
+- Support zone identifiers in IPv6 addresses [Feature #10911](https://bugs.ruby-lang.org/issues/10911)
+- Fix include? and ipv4_mapped (https://github.com/ruby/ipaddr/pull/31)
+
 1.2.2
 -----
 
