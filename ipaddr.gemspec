@@ -8,7 +8,7 @@ if File.exist?(File.expand_path("ipaddr.gemspec"))
   file = File.expand_path("ipaddr.rb", lib)
 else
   # for ruby-core
-  file = File.expand_path("ipaddr.rb")
+  file = File.expand_path("../ipaddr.rb", __FILE__)
 end
 
 version = File.foreach(file).find do |line|
