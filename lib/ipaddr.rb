@@ -102,6 +102,13 @@ class IPAddr
   # Returns the address family of this IP address.
   attr_reader :family
 
+  # Returns true if the given address is a valid IP address, otherwise false.
+  def self.valid?(addr)
+    !!IPAddr.new(addr)
+  rescue IPAddr::AddressFamilyError, IPAddr::InvalidAddressError, IPAddr::InvalidPrefixError
+    return false
+  end
+
   # Creates a new ipaddr containing the given network byte ordered
   # string form of an IP address.
   def self.new_ntoh(addr)
