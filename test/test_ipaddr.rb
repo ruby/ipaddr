@@ -130,6 +130,8 @@ class TC_IPAddr < Test::Unit::TestCase
     assert(IPAddr.valid?("1:2:3:4:5:6:7::"))
     assert(IPAddr.valid?("::2:3:4:5:6:7:8"))
 
+    refute(IPAddr.valid?(nil))
+    refute(IPAddr.valid?(""))
     refute(IPAddr.valid?("192.168.0.256"))
     refute(IPAddr.valid?("192.168.0.011"))
     refute(IPAddr.valid?("fe80::1%"))
