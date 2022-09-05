@@ -114,6 +114,38 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_raise(IPAddr::AddressFamilyError) { IPAddr.new("::ffff:192.168.1.2/120", Socket::AF_INET) }
   end
 
+  def test_valid
+    assert(IPAddr.valid?("::"))
+    assert(IPAddr.valid?("0123:4567:89ab:cdef:0ABC:DEF0:1234:5678"))
+    assert(IPAddr.valid?("3ffe:505:2::/48"))
+    assert(IPAddr.valid?("3ffe:505:2::/ffff:ffff:ffff::"))
+    assert(IPAddr.valid?("fe80::1%ab0"))
+    assert(IPAddr.valid?("0.0.0.0"))
+    assert(IPAddr.valid?("192.168.1.2"))
+    assert(IPAddr.valid?("192.168.1.2/26"))
+    assert(IPAddr.valid?("192.168.1.2/255.255.255.0"))
+    assert(IPAddr.valid?("0:0:0:1::"))
+    assert(IPAddr.valid?("2001:200:300::/48"))
+    assert(IPAddr.valid?("[2001:200:300::]/48"))
+    assert(IPAddr.valid?("1:2:3:4:5:6:7::"))
+    assert(IPAddr.valid?("::2:3:4:5:6:7:8"))
+
+    refute(IPAddr.valid?("192.168.0.256"))
+    refute(IPAddr.valid?("192.168.0.011"))
+    refute(IPAddr.valid?("fe80::1%"))
+    refute(IPAddr.valid?("fe80::1%]"))
+    refute(IPAddr.valid?("[192.168.1.2]/120"))
+    refute(IPAddr.valid?("[2001:200:300::]\nINVALID"))
+    refute(IPAddr.valid?("192.168.0.1/32\nINVALID"))
+    refute(IPAddr.valid?("192.168.0.1/32/20"))
+    refute(IPAddr.valid?("192.168.0.1/032"))
+    refute(IPAddr.valid?("::1/0128"))
+    refute(IPAddr.valid?("::1/255.255.255.0"))
+    refute(IPAddr.valid?("::1/129"))
+    refute(IPAddr.valid?("192.168.0.1/33"))
+    refute(IPAddr.valid?("192.168.0.1/255.255.255.1"))
+  end
+
   def test_s_new_ntoh
     addr = ''
     IPAddr.new("1234:5678:9abc:def0:1234:5678:9abc:def0").hton.each_byte { |c|
