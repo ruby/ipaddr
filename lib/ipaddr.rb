@@ -157,7 +157,7 @@ class IPAddr
   rescue
     false
   else
-    @family == other.family && @addr == other.to_i
+    @family == other.family && @addr == other.to_i && prefix == other.prefix
   end
 
   # Returns a new ipaddr built by masking IP address with the given
