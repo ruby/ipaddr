@@ -3,7 +3,7 @@
 IPAddr provides a set of methods to manipulate an IP address.  Both
 IPv4 and IPv6 are supported.
 
-[![Build Status](https://travis-ci.org/ruby/ipaddr.svg?branch=master)](https://travis-ci.org/ruby/ipaddr)
+[![build](https://github.com/ruby/ipaddr/actions/workflows/test.yml/badge.svg)](https://github.com/ruby/ipaddr/actions/workflows/test.yml)
 
 ## Installation
 
