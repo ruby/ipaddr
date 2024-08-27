@@ -394,6 +394,8 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(false, @a != IPAddr.new("3ffe:505:2::"))
     assert_equal(false, @a == @inconvertible_range)
     assert_equal(false, @a == @inconvertible_string)
+    assert_equal(false, IPAddr.new("0.0.0.0") == nil)
+    assert_equal(false, IPAddr.new("::") == nil)
   end
 
   def test_compare
