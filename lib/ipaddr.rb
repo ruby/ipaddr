@@ -239,14 +239,14 @@ class IPAddr
   end
 
   # Returns a json string containing the IP address representation.
-  def to_json(*)
-    format("\"%s\"", as_json)
+  def to_json(*a)
+    %Q{"#{as_json(*a)}"}
   end
 
   # Returns a string containing the IP address representation in
   # cidr notation
   def cidr
-    format("%s/%s", to_s, prefix)
+    "#{to_s}/#{prefix}"
   end
 
   # Returns a network byte ordered string form of the IP address.
