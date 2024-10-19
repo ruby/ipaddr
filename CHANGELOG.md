@@ -1,5 +1,5 @@
-Unreleased
-----------
+1.2.7
+-----
 
 - Add `IPAddr#to_json/as_json` [\#77](https://github.com/ruby/ipaddr/pull/77) ([taketo1113](https://github.com/taketo1113))
 - Consider IPv4-mapped IPv6 addresses link local/loopback if IPV4 address is private [\#65](https://github.com/ruby/ipaddr/pull/65) ([Earlopain](https://github.com/Earlopain))
