@@ -418,6 +418,11 @@ class IPAddr
     return self.clone.set(@addr + 1, @family)
   end
 
+  # Returns a new ipaddr without a mask
+  def unmasked
+    self.class.new(@unmasked_addr, @family)
+  end
+
   # Compares the ipaddr with another.
   def <=>(other)
     other = coerce_other(other)
@@ -566,6 +571,7 @@ class IPAddr
       raise AddressFamilyError, "unsupported address family"
     end
     @addr = addr
+    @unmasked_addr = addr
     if family[0]
       @family = family[0]
       if @family == Socket::AF_INET
@@ -682,6 +688,7 @@ class IPAddr
     if family != Socket::AF_UNSPEC && @family != family
       raise AddressFamilyError, "address family mismatch"
     end
+    @unmasked_addr = @addr
     if prefixlen
       mask!(prefixlen)
     else
