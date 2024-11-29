@@ -571,4 +571,87 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(true, s.include?(a5))
     assert_equal(true, s.include?(a6))
   end
+
+  # Test for each method
+  def test_each
+    ip = IPAddr.new("192.168.0.0/30")
+    expected = ["192.168.0.0", "192.168.0.1", "192.168.0.2", "192.168.0.3"]
+    actual = []
+    ip.each { |addr| actual << addr.to_s }
+    assert_equal(expected, actual)
+
+    # Test for IPv6
+    ip6 = IPAddr.new("2001:db8::/126")
+    expected6 = ["2001:db8::", "2001:db8::1", "2001:db8::2", "2001:db8::3"]
+    actual6 = []
+    ip6.each { |addr| actual6 << addr.to_s }
+    assert_equal(expected6, actual6)
+  end
+
+  # Test for ip_range_size method
+  def test_ip_range_size
+    ip = IPAddr.new("192.168.0.0/30")
+    assert_equal(4, ip.ip_range_size)
+
+    ip6 = IPAddr.new("2001:db8::/126")
+    assert_equal(4, ip6.ip_range_size)
+  end
+
+  # Test for each_host method
+  def test_each_host
+    ip = IPAddr.new("192.168.0.0/30")
+    expected = ["192.168.0.1", "192.168.0.2"]
+    actual = []
+    ip.each_host { |addr| actual << addr.to_s }
+    assert_equal(expected, actual)
+
+    # Test for IPv6
+    ip6 = IPAddr.new("2001:db8::/126")
+    expected6 = ["2001:db8::", "2001:db8::1", "2001:db8::2", "2001:db8::3"]
+    actual6 = []
+    ip6.each_host { |addr| actual6 << addr.to_s }
+    assert_equal(expected6, actual6)
+  end
+
+  # Test for usable_hosts_size method
+  def test_usable_hosts_size
+    ip = IPAddr.new("192.168.0.0/30")
+    assert_equal(2, ip.usable_hosts_size)
+
+    ip6 = IPAddr.new("2001:db8::/126")
+    assert_equal(4, ip6.usable_hosts_size)
+  end
+
+  # Edge case for IPv4 /32 subnet (single IP address)
+  def test_edge_case_ipv4_single_ip
+    ip = IPAddr.new("192.168.0.1/32")
+    assert_equal(1, ip.ip_range_size)
+    assert_equal(0, ip.usable_hosts_size)
+
+    actual = []
+    ip.each_host { |addr| actual << addr.to_s }
+    assert_empty(actual)
+  end
+
+  # Edge case for IPv6 /128 subnet (single IP address)
+  def test_edge_case_ipv6_single_ip
+    ip6 = IPAddr.new("2001:db8::1/128")
+    assert_equal(1, ip6.ip_range_size)
+    assert_equal(1, ip6.usable_hosts_size)
+
+    actual6 = []
+    ip6.each_host { |addr| actual6 << addr.to_s }
+    assert_equal(["2001:db8::1"], actual6)
+  end
+
+  # Edge case for IPv4 /31 subnet (point-to-point link)
+  def test_edge_case_ipv4_point_to_point
+    ip = IPAddr.new("192.168.0.0/31")
+    assert_equal(2, ip.ip_range_size)
+    assert_equal(0, ip.usable_hosts_size)
+
+    actual = []
+    ip.each_host { |addr| actual << addr.to_s }
+    assert_empty(actual)
+  end
 end
