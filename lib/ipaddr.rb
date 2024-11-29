@@ -457,18 +457,23 @@ class IPAddr
   # Iterates over all usable host addresses
   def each_host
     if @family == Socket::AF_INET
-      # for IPv4 exclude the network and broadcast address
-      if size > 2
-        # Exclude network and broadcast addresses for IPv4
-        ((begin_addr + 1)...end_addr).each do |addr|
+      case size
+      when 1
+        # For /32 networks, yield the single address
+        yield self
+      when 2
+        # For /31 networks, both addresses are usable
+        (begin_addr..end_addr).each do |addr|
           yield self.class.new(addr, @family)
         end
       else
-        # No host addresses available
-        return
+        # For larger networks, exclude network and broadcast addresses
+        ((begin_addr + 1)...end_addr).each do |addr|
+          yield self.class.new(addr, @family)
+        end
       end
     else
-      # Include all addresses for IPv6
+      # For IPv6, include all addresses
       each { |addr| yield addr }
     end
   end
