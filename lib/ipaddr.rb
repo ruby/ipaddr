@@ -463,9 +463,7 @@ class IPAddr
         yield self
       when 2
         # For /31 networks, both addresses are usable
-        (begin_addr..end_addr).each do |addr|
-          yield self.class.new(addr, @family)
-        end
+        each
       else
         # For larger networks, exclude network and broadcast addresses
         ((begin_addr + 1)...end_addr).each do |addr|
