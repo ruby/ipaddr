@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 # coding: utf-8
 
+require_relative 'lib/ipaddr/version'
+
 if File.exist?(File.expand_path("ipaddr.gemspec"))
   lib = File.expand_path("../lib", __FILE__)
   $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -11,13 +13,9 @@ else
   file = File.expand_path("../ipaddr.rb", __FILE__)
 end
 
-version = File.foreach(file).find do |line|
-  /^\s*VERSION\s*=\s*["'](.*)["']/ =~ line and break $1
-end
-
 Gem::Specification.new do |spec|
   spec.name          = "ipaddr"
-  spec.version       = version
+  spec.version       = IPAddr::VERSION
   spec.authors       = ["Akinori MUSHA", "Hajimu UMEMOTO"]
   spec.email         = ["knu@idaemons.org", "ume@mahoroba.org"]
 
@@ -29,7 +27,12 @@ Both IPv4 and IPv6 are supported.
   spec.homepage      = "https://github.com/ruby/ipaddr"
   spec.licenses      = ["Ruby", "BSD-2-Clause"]
 
-  spec.files         = ["LICENSE.txt", "README.md", "ipaddr.gemspec", "lib/ipaddr.rb"]
+  spec.files         = Dir[
+                         "lib/**/*.rb",
+                         "LICENSE.txt",
+                         "README.md",
+                         "ipaddr.gemspec",
+                       ]
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 2.4"
