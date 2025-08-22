@@ -440,12 +440,16 @@ class TC_Operator < Test::Unit::TestCase
   end
 
   def test_equal
-    assert_equal(true, @a == IPAddr.new("3FFE:505:2::"))
-    assert_equal(true, @a == IPAddr.new("3ffe:0505:0002::"))
-    assert_equal(true, @a == IPAddr.new("3ffe:0505:0002:0:0:0:0:0"))
-    assert_equal(false, @a == IPAddr.new("3ffe:505:3::"))
+    assert_equal(true, @a == IPAddr.new("3FFE:0505:2::/48"))
+    assert_equal(true, @a == IPAddr.new("3ffe:0505:0002::/48"))
+    assert_equal(true, @a == IPAddr.new("3ffe:0505:0002:0:0:0:0:0/48"))
+    assert_equal(false, @a == IPAddr.new("3FFE:505:2::"))
+    assert_equal(false, @a == IPAddr.new("3ffe:0505:0002::"))
+    assert_equal(false, @a == IPAddr.new("3ffe:0505:0002:0:0:0:0:0"))
+    assert_equal(false, @a == IPAddr.new("3ffe:0505:2::1/128"))
+    assert_equal(false, @a == IPAddr.new("3ffe:0505:0002:0:0:0:0:1/128"))
     assert_equal(true, @a != IPAddr.new("3ffe:505:3::"))
-    assert_equal(false, @a != IPAddr.new("3ffe:505:2::"))
+    assert_equal(true, @a != IPAddr.new("3ffe:505:2::"))
     assert_equal(false, @a == @inconvertible_range)
     assert_equal(false, @a == @inconvertible_string)
   end
