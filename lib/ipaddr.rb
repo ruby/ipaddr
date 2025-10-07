@@ -40,8 +40,6 @@ require 'socket'
 #   p ipaddr3                   #=> #<IPAddr: IPv4:192.168.2.0/255.255.255.0>
 
 class IPAddr
-  VERSION = "1.2.7"
-
   # 32 bit mask for IPv4
   IN4MASK = 0xffffffff
   # 128 bit mask for IPv6
@@ -453,6 +451,50 @@ class IPAddr
   # Creates a Range object for the network address.
   def to_range
     self.class.new(begin_addr, @family)..self.class.new(end_addr, @family)
+  end
+
+  # Iterates over all addresses in the range; Includes network and broadcast address for IPv4
+  def each
+    (begin_addr..end_addr).each do |addr|
+      yield self.class.new(addr, @family)
+    end
+  end
+
+  # Total number of IP addresses in range
+  def ip_range_size
+    end_addr - begin_addr + 1
+  end
+  alias size ip_range_size
+
+  # Iterates over all usable host addresses
+  def each_host
+    if @family == Socket::AF_INET
+      case size
+      when 1
+        # For /32 networks, yield the single address
+        yield self
+      when 2
+        # For /31 networks, both addresses are usable
+        each
+      else
+        # For larger networks, exclude network and broadcast addresses
+        ((begin_addr + 1)...end_addr).each do |addr|
+          yield self.class.new(addr, @family)
+        end
+      end
+    else
+      # For IPv6, include all addresses
+      each { |addr| yield addr }
+    end
+  end
+
+  # Number of host addresses in range
+  def usable_hosts_size
+    if @family == Socket::AF_INET
+      size > 2 ? size - 2 : 0
+    else
+      size
+    end
   end
 
   # Returns the prefix length in bits for the ipaddr.
