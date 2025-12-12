@@ -168,7 +168,7 @@ class IPAddr
   rescue
     false
   else
-    @family == other.family && @addr == other.to_i
+    @family == other.family && @addr == other.to_i && @mask_addr == other.instance_variable_get(:@mask_addr)
   end
 
   # Returns a new ipaddr built by masking IP address with the given
