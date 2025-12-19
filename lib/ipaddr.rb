@@ -164,6 +164,10 @@ class IPAddr
 
   # Returns true if two ipaddrs are equal.
   def ==(other)
+    if other.nil?
+      return false
+    end
+
     other = coerce_other(other)
   rescue
     false
