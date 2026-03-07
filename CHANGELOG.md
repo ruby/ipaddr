@@ -1,3 +1,12 @@
+1.2.8
+-----
+
+- Fix InvalidAddressError message [\#70](https://github.com/ruby/ipaddr/pull/70) ([ishikawa999](https://github.com/ishikawa999))
+- Remove warning by asserting its presence [\#87](https://github.com/ruby/ipaddr/pull/87) ([etiennebarrie](https://github.com/etiennebarrie))
+- Fix #ipv4_compat returning invalid prefix [\#86](https://github.com/ruby/ipaddr/pull/86) ([taketo1113](https://github.com/taketo1113))
+- Add IPAddr#+/- [\#71](https://github.com/ruby/ipaddr/pull/71) ([taketo1113](https://github.com/taketo1113))
+- Drop support for Ruby 2.3 [\#79](https://github.com/ruby/ipaddr/pull/79) ([taketo1113](https://github.com/taketo1113))
+
 1.2.7
 -----
 
