@@ -293,7 +293,7 @@ class IPAddr
       @addr & 0xff000000 == 0x7f000000 # 127.0.0.1/8
     when Socket::AF_INET6
       @addr == 1 || # ::1
-        (@addr & 0xffff_0000_0000 == 0xffff_0000_0000 && (
+        (@addr >> 32 == 0xffff && (
           @addr & 0xff000000 == 0x7f000000 # ::ffff:127.0.0.1/8
         ))
     else
@@ -314,10 +314,10 @@ class IPAddr
         @addr & 0xffff0000 == 0xc0a80000     # 192.168.0.0/16
     when Socket::AF_INET6
       @addr & 0xfe00_0000_0000_0000_0000_0000_0000_0000 == 0xfc00_0000_0000_0000_0000_0000_0000_0000 ||
-        (@addr & 0xffff_0000_0000 == 0xffff_0000_0000 && (
+        (@addr >> 32 == 0xffff && (
           @addr & 0xff000000 == 0x0a000000 ||  # ::ffff:10.0.0.0/8
-          @addr & 0xfff00000 == 0xac100000 ||  # ::ffff::172.16.0.0/12
-          @addr & 0xffff0000 == 0xc0a80000     # ::ffff::192.168.0.0/16
+          @addr & 0xfff00000 == 0xac100000 ||  # ::ffff:172.16.0.0/12
+          @addr & 0xffff0000 == 0xc0a80000     # ::ffff:192.168.0.0/16
         ))
     else
       raise AddressFamilyError, "unsupported address family"
@@ -335,7 +335,7 @@ class IPAddr
       @addr & 0xffff0000 == 0xa9fe0000 # 169.254.0.0/16
     when Socket::AF_INET6
       @addr & 0xffc0_0000_0000_0000_0000_0000_0000_0000 == 0xfe80_0000_0000_0000_0000_0000_0000_0000 || # fe80::/10
-        (@addr & 0xffff_0000_0000 == 0xffff_0000_0000 && (
+        (@addr >> 32 == 0xffff && (
           @addr & 0xffff0000 == 0xa9fe0000 # ::ffff:169.254.0.0/16
         ))
     else
