@@ -1,3 +1,10 @@
+1.2.9
+-----
+
+- Fix IPAddr#== returning true when compared with nil for 0.0.0.0 and :: [\#76](https://github.com/ruby/ipaddr/pull/76) ([taketo1113](https://github.com/taketo1113))
+- Fix IPAddr#private?, #link_local? and #loopback? incorrectly matching public IPv6 addresses as IPv4-mapped [\#106](https://github.com/ruby/ipaddr/pull/106) ([jarthod](https://github.com/jarthod))
+- Follow-up fix for InvalidAddressError messages [\#92](https://github.com/ruby/ipaddr/pull/92) ([taketo1113](https://github.com/taketo1113))
+
 1.2.8
 -----
 
