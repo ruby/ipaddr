@@ -668,6 +668,16 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(true,  IPAddr.new('ff02::2').link_local_multicast?)
   end
 
+  def test_global_unicast?
+    assert_equal(true, IPAddr.new('240.0.0.0').global_unicast?)
+    assert_equal(false, IPAddr.new('232.0.0.0').global_unicast?)
+    assert_equal(false, IPAddr.new('169.254.0.0').global_unicast?)
+    assert_equal(false, IPAddr.new('255.255.255.255').global_unicast?)
+    assert_equal(true, IPAddr.new('2001::1').global_unicast?)
+    assert_equal(false, IPAddr.new('fe80::').global_unicast?)
+    assert_equal(false, IPAddr.new('ff05::').global_unicast?)
+  end
+
   def test_hash
     a1 = IPAddr.new('192.168.2.0')
     a2 = IPAddr.new('192.168.2.0')
