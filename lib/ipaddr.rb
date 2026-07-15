@@ -385,6 +385,28 @@ class IPAddr
     end
   end
 
+  # Returns true if the ipaddr is a global unicast address. This is an address which is
+  # not a broadcast address, not an unspecified address (i.e. gateway), not a loopback
+  # address, not a multicast address, and not a link local unicast address.
+  def global_unicast?
+    broadcast_or_unspecified = case @family
+    when Socket::AF_INET
+      bits = @addr & IN4MASK
+      bits == IN4MASK || bits == 0x00000000
+    when Socket::AF_INET6
+      @addr & IN6MASK == IN6MASK
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+
+    !(
+      broadcast_or_unspecified ||
+      loopback? ||
+      multicast? ||
+      link_local_unicast?
+    )
+  end
+
   # Returns true if the ipaddr is an IPv4-mapped IPv6 address.
   def ipv4_mapped?
     return ipv6? && (@addr >> 32) == 0xffff
