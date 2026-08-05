@@ -312,6 +312,37 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal(a.netmask, "255.255.255.0")
   end
 
+  def test_subnet_mask_class_methods
+    assert_equal("0.0.0.0", IPAddr.ipv4_subnet_masks(0))
+    assert_equal("128.0.0.0", IPAddr.ipv4_subnet_masks(1))
+    assert_equal("255.255.255.0", IPAddr.ipv4_subnet_masks(24))
+    assert_equal("255.255.255.255", IPAddr.ipv4_subnet_masks(32))
+
+    assert_equal("0000:0000:0000:0000:0000:0000:0000:0000", IPAddr.ipv6_subnet_masks(0))
+    assert_equal("ffff:ffff:ffff:ffff:0000:0000:0000:0000", IPAddr.ipv6_subnet_masks(64))
+    assert_equal("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", IPAddr.ipv6_subnet_masks(128))
+
+    [nil, "24", 24.0, -1, 33].each do |prefix|
+      assert_raise(IPAddr::InvalidPrefixError) { IPAddr.ipv4_subnet_masks(prefix) }
+    end
+
+    [nil, "64", 64.0, -1, 129].each do |prefix|
+      assert_raise(IPAddr::InvalidPrefixError) { IPAddr.ipv6_subnet_masks(prefix) }
+    end
+  end
+
+  def test_netmask_predicate
+    assert_equal(true, IPAddr.new("0.0.0.0").netmask?)
+    assert_equal(true, IPAddr.new("255.255.255.0").netmask?)
+    assert_equal(true, IPAddr.new("255.255.255.255").netmask?)
+    assert_equal(false, IPAddr.new("255.0.255.0").netmask?)
+
+    assert_equal(true, IPAddr.new("::").netmask?)
+    assert_equal(true, IPAddr.new("ffff:ffff:ffff:ffff::").netmask?)
+    assert_equal(true, IPAddr.new("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").netmask?)
+    assert_equal(false, IPAddr.new("ffff:ffff:0:ffff::").netmask?)
+  end
+
   def test_wildcard_mask
     a = IPAddr.new("192.168.1.2/1")
     assert_equal(a.wildcard_mask, "127.255.255.255")
