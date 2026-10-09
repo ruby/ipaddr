@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 require 'test/unit'
+require 'core_assertions'
 require 'ipaddr'
 
 class TC_IPAddr < Test::Unit::TestCase
+  include Test::Unit::CoreAssertions
+
   def test_s_new
     [
       ["3FFE:505:ffff::/48"],
