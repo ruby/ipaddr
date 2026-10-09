@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 require 'test/unit'
+require 'core_assertions'
 require 'ipaddr'
 
 class TC_IPAddr < Test::Unit::TestCase
+  include Test::Unit::CoreAssertions
+
   def test_s_new
     [
       ["3FFE:505:ffff::/48"],
@@ -285,6 +288,16 @@ class TC_IPAddr < Test::Unit::TestCase
   def test_to_s
     assert_equal("3ffe:0505:0002:0000:0000:0000:0000:0001", IPAddr.new("3ffe:505:2::1").to_string)
     assert_equal("3ffe:505:2::1", IPAddr.new("3ffe:505:2::1").to_s)
+  end
+
+  def test_to_hex
+    assert_equal("c0a80101", IPAddr.new("192.168.1.1").to_hex)
+    assert_equal("00000000", IPAddr.new("0.0.0.0").to_hex)
+    assert_equal("ffffffff", IPAddr.new("255.255.255.255").to_hex)
+    assert_equal("3ffe0505000200000000000000000001", IPAddr.new("3ffe:505:2::1").to_hex)
+    assert_equal("0123456789abcdef0abcdef012345678", IPAddr.new("123:4567:89ab:cdef:0abc:def0:1234:5678").to_hex)
+    assert_equal("00000000000000000000000000000000", IPAddr.new("::").to_hex)
+    assert_equal("ffffffffffffffffffffffffffffffff", IPAddr.new("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff").to_hex)
   end
 
   def test_as_json
