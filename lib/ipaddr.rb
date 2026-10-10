@@ -712,6 +712,7 @@ class IPAddr
         raise AddressFamilyError, "unsupported address family: #{family}"
       end
     end
+    requested_family = family
     prefix, prefixlen = addr.split('/', 2)
     if prefix =~ /\A\[(.*)\]\z/i
       prefix = $1
@@ -721,6 +722,9 @@ class IPAddr
       prefix = $1
       zone_id = $2
       family = Socket::AF_INET6
+    end
+    if requested_family != Socket::AF_UNSPEC && family != requested_family
+      raise AddressFamilyError, "address family mismatch"
     end
     # It seems AI_NUMERICHOST doesn't do the job.
     #Socket.getaddrinfo(left, nil, Socket::AF_INET6, Socket::SOCK_STREAM, nil,
