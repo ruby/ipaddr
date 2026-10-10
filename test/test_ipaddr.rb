@@ -3,6 +3,18 @@ require 'test/unit'
 require 'ipaddr'
 
 class TC_IPAddr < Test::Unit::TestCase
+  def test_ipv6_literals_respect_explicit_family
+    ['[::]', '::%eth0', '[::%eth0]', '[fe80::1%eth0]/64'].each do |literal|
+      assert_raise(IPAddr::AddressFamilyError, literal) do
+        IPAddr.new(literal, Socket::AF_INET)
+      end
+      assert_raise(IPAddr::AddressFamilyError, literal) do
+        IPAddr.new(literal, Socket::AF_UNIX)
+      end
+      assert_equal(IPAddr.new(literal), IPAddr.new(literal, Socket::AF_INET6))
+    end
+  end
+
   def test_s_new
     [
       ["3FFE:505:ffff::/48"],
