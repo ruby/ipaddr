@@ -1,3 +1,13 @@
+1.3.0
+-----
+
+- Respect explicit families for bracketed and scoped IPv6 addresses [\#128](https://github.com/ruby/ipaddr/pull/128) ([ac1982](https://github.com/ac1982))
+- Append the zone ID after compressing the address in IPAddr#to_s [\#127](https://github.com/ruby/ipaddr/pull/127) ([afurm](https://github.com/afurm))
+- Fix false positives in private?/link_local?/multicast?/link_local_multicast? for supernets of the target address blocks [\#125](https://github.com/ruby/ipaddr/pull/125) ([taketo1113](https://github.com/taketo1113))
+- Fix link_local_multicast? mask for IPv4-mapped addresses [\#123](https://github.com/ruby/ipaddr/pull/123) ([carlosdanielpohlod](https://github.com/carlosdanielpohlod))
+- extra multicast/unicast predicates [\#114](https://github.com/ruby/ipaddr/pull/114) ([HoneyryderChuck](https://github.com/HoneyryderChuck))
+  - Add `#multicast?` / `#link_local_multicast?`
+
 1.2.9
 -----
 
