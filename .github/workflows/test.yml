@@ -1,0 +1,34 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  ruby-versions:
+    uses: ruby/actions/.github/workflows/ruby_versions.yml@master
+    with:
+      min_version: 2.4
+
+  build:
+    needs: ruby-versions
+    name: build (${{ matrix.ruby }} / ${{ matrix.os }})
+    strategy:
+      matrix:
+        ruby: ${{ fromJson(needs.ruby-versions.outputs.versions) }}
+        os: [ ubuntu-latest, macos-latest ]
+        exclude:
+          - { os: macos-latest, ruby: '2.4' }
+          - { os: macos-latest, ruby: '2.5' }
+        include:
+          - { os: macos-15-intel, ruby: '2.4' }
+          - { os: macos-15-intel, ruby: '2.5' }
+
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v7
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true # 'bundle install' and cache
+    - name: Run test
+      run: bundle exec rake test

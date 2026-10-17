@@ -1,4 +1,71 @@
-- Change IPv4 address parsing to recognize shorthand addresses, like [inet_aton](https://linux.die.net/man/3/inet_aton) does. [Feature #15734](https://bugs.ruby-lang.org/issues/15734)
+- Recognize shorthand IPv4 addresses like [inet_aton](https://linux.die.net/man/3/inet_aton) does. [\#12](https://github.com/ruby/ipaddr/pull/12) ([Envek](https://github.com/Envek))
+
+1.3.0
+-----
+
+- Respect explicit families for bracketed and scoped IPv6 addresses [\#128](https://github.com/ruby/ipaddr/pull/128) ([ac1982](https://github.com/ac1982))
+- Append the zone ID after compressing the address in IPAddr#to_s [\#127](https://github.com/ruby/ipaddr/pull/127) ([afurm](https://github.com/afurm))
+- Fix false positives in private?/link_local?/multicast?/link_local_multicast? for supernets of the target address blocks [\#125](https://github.com/ruby/ipaddr/pull/125) ([taketo1113](https://github.com/taketo1113))
+- Fix link_local_multicast? mask for IPv4-mapped addresses [\#123](https://github.com/ruby/ipaddr/pull/123) ([carlosdanielpohlod](https://github.com/carlosdanielpohlod))
+- extra multicast/unicast predicates [\#114](https://github.com/ruby/ipaddr/pull/114) ([HoneyryderChuck](https://github.com/HoneyryderChuck))
+  - Add `#multicast?` / `#link_local_multicast?`
+
+1.2.9
+-----
+
+- Fix IPAddr#== returning true when compared with nil for 0.0.0.0 and :: [\#76](https://github.com/ruby/ipaddr/pull/76) ([taketo1113](https://github.com/taketo1113))
+- Fix IPAddr#private?, #link_local? and #loopback? incorrectly matching public IPv6 addresses as IPv4-mapped [\#106](https://github.com/ruby/ipaddr/pull/106) ([jarthod](https://github.com/jarthod))
+- Follow-up fix for InvalidAddressError messages [\#92](https://github.com/ruby/ipaddr/pull/92) ([taketo1113](https://github.com/taketo1113))
+
+1.2.8
+-----
+
+- Fix InvalidAddressError message [\#70](https://github.com/ruby/ipaddr/pull/70) ([ishikawa999](https://github.com/ishikawa999))
+- Remove warning by asserting its presence [\#87](https://github.com/ruby/ipaddr/pull/87) ([etiennebarrie](https://github.com/etiennebarrie))
+- Fix #ipv4_compat returning invalid prefix [\#86](https://github.com/ruby/ipaddr/pull/86) ([taketo1113](https://github.com/taketo1113))
+- Add IPAddr#+/- [\#71](https://github.com/ruby/ipaddr/pull/71) ([taketo1113](https://github.com/taketo1113))
+- Drop support for Ruby 2.3 [\#79](https://github.com/ruby/ipaddr/pull/79) ([taketo1113](https://github.com/taketo1113))
+
+1.2.7
+-----
+
+- Add `IPAddr#to_json/as_json` [\#77](https://github.com/ruby/ipaddr/pull/77) ([taketo1113](https://github.com/taketo1113))
+- Consider IPv4-mapped IPv6 addresses link local/loopback if IPV4 address is private [\#65](https://github.com/ruby/ipaddr/pull/65) ([Earlopain](https://github.com/Earlopain))
+- Fix broken exception messages [\#64](https://github.com/ruby/ipaddr/pull/64) ([lrandall-godaddy](https://github.com/lrandall-godaddy))
+- ntop: Measure address size in bytes [\#61](https://github.com/ruby/ipaddr/pull/61) ([hanazuki](https://github.com/hanazuki))
+- String\#split seems to be faster than capturing digits with Regexp [\#50](https://github.com/ruby/ipaddr/pull/50) ([amatsuda](https://github.com/amatsuda))
+- Prefer String\#start\_with? over Regexp.match [\#49](https://github.com/ruby/ipaddr/pull/49) ([amatsuda](https://github.com/amatsuda))
+- Add IPAddr\#wildcard\_mask [\#44](https://github.com/ruby/ipaddr/pull/44) ([taketo1113](https://github.com/taketo1113))
+- Add IPAddr.cidr to return ip address in cidr notation [\#23](https://github.com/ruby/ipaddr/pull/23) ([beanieboi](https://github.com/beanieboi))
+
+1.2.6
+-----
+
+- Consider IPv4-mapped IPv6 addresses private if IPv4 address is private [\#57](https://github.com/ruby/ipaddr/pull/57) ([jeremyevans](https://github.com/jeremyevans))
+- Improve performance of include? by 5-10x [\#47](https://github.com/ruby/ipaddr/pull/47) ([skipkayhil](https://github.com/skipkayhil))
+
+1.2.5
+-----
+
+- No user-visible changes for gem users
+
+1.2.4
+-----
+
+- Fix exception calling `to_range' after `freeze' - fix \#35 [\#36](https://github.com/ruby/ipaddr/pull/36) ([esparta](https://github.com/esparta))
+- IPAddr\#native must also coerce `@mask_addr` [\#34](https://github.com/ruby/ipaddr/pull/34) ([casperisfine](https://github.com/casperisfine))
+- Expose IPAddr::VERSION [\#33](https://github.com/ruby/ipaddr/pull/33) ([casperisfine](https://github.com/casperisfine))
+
+1.2.3
+-----
+
+- Ruby 2.3 is the minimum supported version
+- Follow the license change in Ruby and add BSD-2-Clause
+- Make the parser a bit stricter [Bug #15832](https://bugs.ruby-lang.org/issues/15832)
+  - Disallow leading zeros and extra slashes in mask
+- Make IPAddr#include? consider range of argument [Bug #14119](https://bugs.ruby-lang.org/issues/14119)
+- Support zone identifiers in IPv6 addresses [Feature #10911](https://bugs.ruby-lang.org/issues/10911)
+- Fix include? and ipv4_mapped (https://github.com/ruby/ipaddr/pull/31)
 
 1.2.2
 -----

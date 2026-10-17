@@ -3,6 +3,8 @@
 IPAddr provides a set of methods to manipulate an IP address.  Both
 IPv4 and IPv6 are supported.
 
+[![build](https://github.com/ruby/ipaddr/actions/workflows/test.yml/badge.svg)](https://github.com/ruby/ipaddr/actions/workflows/test.yml)
+
 ## Installation
 
 This library is part of the standard ruby distribution as default gem
@@ -13,7 +15,7 @@ version than comes with older versions of ruby.
 For example, you can add this line to your application's Gemfile:
 
 ```ruby
-gem 'ipaddr', '~> 1.2'
+gem 'ipaddr'
 ```
 
 And then execute:
@@ -53,7 +55,7 @@ than `ipaddr` has, try this library instead.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bundle install` to install dependencies. Then, run `rake test` to run the tests.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 

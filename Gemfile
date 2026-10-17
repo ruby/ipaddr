@@ -1,4 +1,8 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in ipaddr.gemspec
 gemspec
+
+gem "bundler"
+gem "rake"
+gem "test-unit"
+gem "test-unit-ruby-core"
