@@ -51,11 +51,17 @@ class IPAddr
   IN6FORMAT = (["%.4x"] * 8).join(':').freeze
 
   # Regexp _internally_ used for parsing IPv4 address.
+  # Accepts shorthand forms like +inet_aton+ does:
+  #   127.0.0.1 = 127.1 = 0x7f.1 = 0177.1 = 2130706433
+  #   192.168.255.255 = 192.168.65535 = 0xC0.0xA8FFFF = 3232301055
   RE_IPV4ADDRLIKE = %r{
     \A
-    \d+ \. \d+ \. \d+ \. \d+
+    (?:((?:0x?)?[\da-f]{1,3})\.)?
+    (?:((?:0x?)?[\da-f]{1,3})\.)?
+    (?:((?:0x?)?[\da-f]{1,3})\.)?
+    (?:((?:0x?)?[\da-f]{1,10}))
     \z
-  }x
+  }xi
 
   # Regexp _internally_ used for parsing IPv6 address.
   RE_IPV6ADDRLIKE_FULL = %r{
@@ -787,14 +793,19 @@ class IPAddr
     when Array
       octets = addr
     else
-      RE_IPV4ADDRLIKE.match?(addr) or return nil
-      octets = addr.split('.')
+      m = RE_IPV4ADDRLIKE.match(addr) or return nil
+      octets = m.captures
     end
-    octets.inject(0) { |i, s|
-      (n = s.to_i) < 256 or raise InvalidAddressError, "invalid address: #{addr}"
-      (s != '0') && s.start_with?('0') and raise InvalidAddressError, "zero-filled number in IPv4 address is ambiguous: #{addr}"
-      i << 8 | n
-    }
+    octets.each.with_index.inject(0) do |address, (octet, index)|
+      address = address << 8
+      next address unless octet
+
+      n = Integer(octet)
+      max_exponent = index == 3 ? 8 * (1 + octets.count(&:nil?)) : 8
+      n < 2**max_exponent or raise InvalidAddressError, "invalid address: #{addr}"
+
+      address | n
+    end
   end
 
   def in6_addr(left)
