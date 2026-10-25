@@ -35,8 +35,14 @@ jobs:
           bundler-cache: true
           ruby-version: ruby
 
+      - name: Configure trusted publishing credentials
+        uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
+
       - name: Publish to RubyGems
-        uses: rubygems/release-gem@7f9650160c1a4e7989fdc9855807bdbd421d8b6b # v1.4.1
+        run: rake release
+
+      - name: Wait for release to propagate
+        run: gem exec rubygems-await pkg/*.gem
 
       - name: Create GitHub release
         run: |
