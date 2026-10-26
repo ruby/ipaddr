@@ -107,17 +107,16 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("0:2:3:4:5:6:7:8", IPAddr.new("::2:3:4:5:6:7:8").to_s)
 
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.256") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.011") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("fe80::1%") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("fe80::1%]") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[192.168.1.2]") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[192.168.1.2]/120") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[2001:200:300::]\nINVALID") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.1/32\nINVALID") }
-    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.1/32/20") }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.1.2", Socket::AF_INET6) }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[192.168.1.2]", Socket::AF_INET6) }
     assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("[192.168.1.2]", Socket::AF_INET) }
+    assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("192.168.0.1/32/20") }
     assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("192.168.0.1/032") }
     assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("::1/0128") }
     assert_raise(IPAddr::InvalidPrefixError) { IPAddr.new("::1/255.255.255.0") }
@@ -129,6 +128,24 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_raise(IPAddr::AddressFamilyError) { IPAddr.new("[::]", Socket::AF_INET) }
     assert_raise(IPAddr::AddressFamilyError) { IPAddr.new("::%eth0", Socket::AF_INET) }
     assert_raise(IPAddr::AddressFamilyError) { IPAddr.new("[::%eth0]", Socket::AF_INET) }
+  end
+
+  def test_s_new_aton_compatible
+    assert_equal("127.0.0.1",       IPAddr.new("127.1").to_s)
+    assert_equal("127.0.0.2",       IPAddr.new("0x7F.2").to_s)
+    assert_equal("127.0.0.42",      IPAddr.new("0177.42").to_s)
+    assert_equal("127.0.0.34",      IPAddr.new("0x7f.042").to_s)
+    assert_equal("127.0.0.1",       IPAddr.new("2130706433").to_s)
+    assert_equal("255.255.255.255", IPAddr.new("4294967295").to_s)
+    assert_equal("192.168.1.1",     IPAddr.new("192.168.257").to_s)
+    assert_equal("10.1.136.148",    IPAddr.new("10.100500").to_s)
+    assert_equal("192.168.0.9",     IPAddr.new("192.168.0.011").to_s)
+    assert_equal("192.168.1.100",   IPAddr.new("192.168.01.100").to_s)
+    assert_equal("192.168.255.255", IPAddr.new("0xC0.0xA8FFFF").to_s)
+
+    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("192.168.0.256") }
+    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("256.168.0.1") }
+    assert_raise(IPAddr::InvalidAddressError) { IPAddr.new("4294967296") }
   end
 
   def test_s_new_ntoh
@@ -799,11 +816,6 @@ class TC_Operator < Test::Unit::TestCase
       IPAddr.new('192.168.0.1000')
     end
     assert_equal('invalid address: 192.168.0.1000', e.message)
-
-    e = assert_raise(IPAddr::InvalidAddressError) do
-      IPAddr.new('192.168.01.100')
-    end
-    assert_equal('zero-filled number in IPv4 address is ambiguous: 192.168.01.100', e.message)
 
     e = assert_raise(IPAddr::InvalidAddressError) do
       IPAddr.new('INVALID')
