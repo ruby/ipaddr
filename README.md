@@ -46,6 +46,22 @@ ipaddr3 = IPAddr.new "192.168.2.0/24"
 p ipaddr3                   #=> #<IPAddr: IPv4:192.168.2.0/255.255.255.0>
 ```
 
+Subnet mask helper methods are also available:
+
+```ruby
+IPAddr.ipv4_subnet_masks(24)
+#=> "255.255.255.0"
+
+IPAddr.ipv6_subnet_masks(64)
+#=> "ffff:ffff:ffff:ffff:0000:0000:0000:0000"
+
+IPAddr.new("255.255.255.0").netmask?
+#=> true
+
+IPAddr.new("192.168.1.1").netmask?
+#=> false
+```
+
 ## Alternative
 
 The [ipaddress](https://rubygems.org/gems/ipaddress) gem is a popular,
