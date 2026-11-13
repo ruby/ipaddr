@@ -1,3 +1,5 @@
+- Recognize shorthand IPv4 addresses like [inet_aton](https://linux.die.net/man/3/inet_aton) does. [\#12](https://github.com/ruby/ipaddr/pull/12) ([Envek](https://github.com/Envek))
+
 1.3.0
 -----
 
