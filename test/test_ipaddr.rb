@@ -554,6 +554,15 @@ class TC_Operator < Test::Unit::TestCase
     assert_raise(IPAddr::InvalidPrefixError) {@a.mask("ffff:1::")}
   end
 
+  def test_mask_long_invalid_prefix
+    # A long invalid prefix used to be split between [1-9]+ and \d* in every
+    # possible way, so the regexp engine backtracked quadratically.
+    pre = ->(n) { "1.2.3.4/" + "1" * (n * 500) + "x" }
+    assert_linear_performance([5, 10, 20, 40, 80], pre: pre) do |addr|
+      assert_raise(IPAddr::InvalidAddressError) { IPAddr.new(addr) }
+    end
+  end
+
   def test_include?
     assert_equal(true, @a.include?(IPAddr.new("3ffe:505:2::")))
     assert_equal(true, @a.include?(IPAddr.new("3ffe:505:2::1")))
