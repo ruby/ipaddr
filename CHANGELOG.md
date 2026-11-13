@@ -1,3 +1,13 @@
+1.3.1
+-----
+
+- Add IPAddr#unspecified? predicate [\#139](https://github.com/ruby/ipaddr/pull/139) ([moshemalawach](https://github.com/moshemalawach))
+- Accept valid compressed IPv6 addresses that are currently rejected [\#136](https://github.com/ruby/ipaddr/pull/136) ([datibbaw](https://github.com/datibbaw))
+- Allow -, . and ~ in IPv6 zone IDs [\#132](https://github.com/ruby/ipaddr/pull/132) ([wleeaf](https://github.com/wleeaf))
+- Add IPAddr#to_bits [\#131](https://github.com/ruby/ipaddr/pull/131) ([taketo1113](https://github.com/taketo1113))
+- Warn on bracketed IPv6 address with a prefix length [\#130](https://github.com/ruby/ipaddr/pull/130) ([taketo1113](https://github.com/taketo1113))
+- Add IPAddr#to_hex [\#126](https://github.com/ruby/ipaddr/pull/126) ([datibbaw](https://github.com/datibbaw))
+
 1.3.0
 -----
 
