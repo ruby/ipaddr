@@ -352,6 +352,27 @@ class TC_IPAddr < Test::Unit::TestCase
     assert_equal("\"2001:200:300::/48\"", IPAddr.new("2001:200:300::/48").to_json)
   end
 
+  def test_class_netmask
+    assert_equal("0.0.0.0", IPAddr.netmask(0))
+    assert_equal("128.0.0.0", IPAddr.netmask(1))
+    assert_equal("255.255.255.0", IPAddr.netmask(24))
+    assert_equal("255.255.255.255", IPAddr.netmask(32))
+    assert_equal("255.255.255.0", IPAddr.netmask(24, Socket::AF_INET))
+
+    assert_equal("0000:0000:0000:0000:0000:0000:0000:0000", IPAddr.netmask(0, Socket::AF_INET6))
+    assert_equal("ffff:ffff:ffff:ffff:0000:0000:0000:0000", IPAddr.netmask(64, Socket::AF_INET6))
+    assert_equal("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", IPAddr.netmask(128, Socket::AF_INET6))
+
+    [nil, "24", "255.255.255.0", 24.0, 24.5, -1, 33].each do |prefixlen|
+      assert_raise(IPAddr::InvalidPrefixError) { IPAddr.netmask(prefixlen) }
+    end
+    [-1, 129].each do |prefixlen|
+      assert_raise(IPAddr::InvalidPrefixError) { IPAddr.netmask(prefixlen, Socket::AF_INET6) }
+    end
+
+    assert_raise(IPAddr::AddressFamilyError) { IPAddr.netmask(24, Socket::AF_UNSPEC) }
+  end
+
   def test_netmask
     a = IPAddr.new("192.168.1.2/8")
     assert_equal(a.netmask, "255.0.0.0")
