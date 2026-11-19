@@ -127,6 +127,20 @@ class IPAddr
     end
   end
 
+  # Returns the netmask in string format for the given prefix length
+  # and address family (IPv4 by default).
+  #
+  #   IPAddr.netmask(24)                    #=> "255.255.255.0"
+  #   IPAddr.netmask(64, Socket::AF_INET6)  #=> "ffff:ffff:ffff:ffff:0000:0000:0000:0000"
+  #
+  # Raises InvalidPrefixError if +prefixlen+ is not an Integer within
+  # the valid range for +family+.
+  def self.netmask(prefixlen, family = Socket::AF_INET)
+    raise InvalidPrefixError, 'prefix must be an integer' unless prefixlen.is_a?(Integer)
+
+    new(0, family).mask(prefixlen).netmask
+  end
+
   # Returns a new ipaddr built by bitwise AND.
   def &(other)
     return self.clone.set(@addr & coerce_other(other).to_i)

@@ -44,6 +44,10 @@ p ipaddr2.to_s              #=> "3ffe:505:2::"
 ipaddr3 = IPAddr.new "192.168.2.0/24"
 
 p ipaddr3                   #=> #<IPAddr: IPv4:192.168.2.0/255.255.255.0>
+
+p IPAddr.netmask(24)        #=> "255.255.255.0"
+
+p IPAddr.netmask(64, Socket::AF_INET6) #=> "ffff:ffff:ffff:ffff:0000:0000:0000:0000"
 ```
 
 ## Alternative
