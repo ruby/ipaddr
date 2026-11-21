@@ -791,6 +791,254 @@ class TC_Operator < Test::Unit::TestCase
     assert_equal(true, IPAddr.new('::ffff:224.0.0.0/120').link_local_multicast?)
   end
 
+  def test_globally_reachable?
+    # 0.0.0.0/8 This network: False
+    assert_equal(false, IPAddr.new('0.0.0.0/8').globally_reachable?)
+    assert_equal(false, IPAddr.new('0.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('0.255.255.255').globally_reachable?)
+    # 0.0.0.0/32 This host on this network: False
+    assert_equal(false, IPAddr.new('0.0.0.0').globally_reachable?)
+    # 10.0.0.0/8 Private-Use: False
+    assert_equal(false, IPAddr.new('10.0.0.0/8').globally_reachable?)
+    assert_equal(false, IPAddr.new('10.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('10.255.255.255').globally_reachable?)
+    # 100.64.0.0/10 Shared Address Space: False
+    assert_equal(false, IPAddr.new('100.64.0.0/10').globally_reachable?)
+    assert_equal(false, IPAddr.new('100.64.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('100.127.255.255').globally_reachable?)
+    # 127.0.0.0/8 Loopback: False
+    assert_equal(false, IPAddr.new('127.0.0.0/8').globally_reachable?)
+    assert_equal(false, IPAddr.new('127.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('127.255.255.255').globally_reachable?)
+    # 169.254.0.0/16 Link Local: False
+    assert_equal(false, IPAddr.new('169.254.0.0/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('169.254.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('169.254.255.255').globally_reachable?)
+    # 172.16.0.0/12 Private-Use: False
+    assert_equal(false, IPAddr.new('172.16.0.0/12').globally_reachable?)
+    assert_equal(false, IPAddr.new('172.16.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('172.31.255.255').globally_reachable?)
+    # 192.0.0.0/24 IETF Protocol Assignments: False
+    assert_equal(false, IPAddr.new('192.0.0.0/24').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.255').globally_reachable?)
+    # 192.0.0.0/29 IPv4 Service Continuity Prefix: False
+    assert_equal(false, IPAddr.new('192.0.0.0/29').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.7').globally_reachable?)
+    # 192.0.0.8/32 IPv4 dummy address: False
+    assert_equal(false, IPAddr.new('192.0.0.8').globally_reachable?)
+    # 192.0.0.9/32 Port Control Protocol Anycast: True
+    assert_equal(true , IPAddr.new('192.0.0.9').globally_reachable?)
+    # 192.0.0.10/32 Traversal Using Relays around NAT Anycast: True
+    assert_equal(true , IPAddr.new('192.0.0.10').globally_reachable?)
+    # 192.0.0.170/32 NAT64/DNS64 Discovery: False
+    assert_equal(false, IPAddr.new('192.0.0.170').globally_reachable?)
+    # 192.0.0.171/32 NAT64/DNS64 Discovery: False
+    assert_equal(false, IPAddr.new('192.0.0.171').globally_reachable?)
+    # 192.0.2.0/24 Documentation (TEST-NET-1): False
+    assert_equal(false, IPAddr.new('192.0.2.0/24').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.2.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.2.255').globally_reachable?)
+    # 192.31.196.0/24 AS112-v4: True
+    assert_equal(true , IPAddr.new('192.31.196.0/24').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.31.196.0').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.31.196.255').globally_reachable?)
+    # 192.52.193.0/24 AMT: True
+    assert_equal(true , IPAddr.new('192.52.193.0/24').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.52.193.0').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.52.193.255').globally_reachable?)
+    # 192.88.99.2/32 6a44-relay anycast address: False
+    assert_equal(false, IPAddr.new('192.88.99.2').globally_reachable?)
+    # 192.168.0.0/16 Private-Use: False
+    assert_equal(false, IPAddr.new('192.168.0.0/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.168.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.168.255.255').globally_reachable?)
+    # 192.175.48.0/24 Direct Delegation AS112 Service: True
+    assert_equal(true , IPAddr.new('192.175.48.0/24').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.175.48.0').globally_reachable?)
+    assert_equal(true , IPAddr.new('192.175.48.255').globally_reachable?)
+    # 198.18.0.0/15 Benchmarking: False
+    assert_equal(false, IPAddr.new('198.18.0.0/15').globally_reachable?)
+    assert_equal(false, IPAddr.new('198.18.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('198.19.255.255').globally_reachable?)
+    # 198.51.100.0/24 Documentation (TEST-NET-2): False
+    assert_equal(false, IPAddr.new('198.51.100.0/24').globally_reachable?)
+    assert_equal(false, IPAddr.new('198.51.100.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('198.51.100.255').globally_reachable?)
+    # 203.0.113.0/24 Documentation (TEST-NET-3): False
+    assert_equal(false, IPAddr.new('203.0.113.0/24').globally_reachable?)
+    assert_equal(false, IPAddr.new('203.0.113.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('203.0.113.255').globally_reachable?)
+    # 240.0.0.0/4 Reserved: False
+    assert_equal(false, IPAddr.new('240.0.0.0/4').globally_reachable?)
+    assert_equal(false, IPAddr.new('240.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('255.255.255.255').globally_reachable?)
+    # 255.255.255.255/32 Limited Broadcast: False
+    assert_equal(false, IPAddr.new('255.255.255.255').globally_reachable?)
+
+    # ::1/128 Loopback Address: False
+    assert_equal(false, IPAddr.new('::1').globally_reachable?)
+    # ::/128 Unspecified Address: False
+    assert_equal(false, IPAddr.new('::').globally_reachable?)
+    # ::ffff:0:0/96 IPv4-mapped Address: False
+    assert_equal(false, IPAddr.new('::ffff:0:0/96').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:0.0.0.0').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:255.255.255.255').globally_reachable?)
+    # 64:ff9b::/96 IPv4-IPv6 Translat.: True
+    assert_equal(true , IPAddr.new('64:ff9b::/96').globally_reachable?)
+    assert_equal(true , IPAddr.new('64:ff9b::').globally_reachable?)
+    assert_equal(true , IPAddr.new('64:ff9b::ffff:ffff').globally_reachable?)
+    # 64:ff9b:1::/48 IPv4-IPv6 Translat.: False
+    assert_equal(false, IPAddr.new('64:ff9b:1::/48').globally_reachable?)
+    assert_equal(false, IPAddr.new('64:ff9b:1::').globally_reachable?)
+    assert_equal(false, IPAddr.new('64:ff9b:1:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 100::/64 Discard-Only Address Block: False
+    assert_equal(false, IPAddr.new('100::/64').globally_reachable?)
+    assert_equal(false, IPAddr.new('100::').globally_reachable?)
+    assert_equal(false, IPAddr.new('100::ffff:ffff:ffff:ffff').globally_reachable?)
+    # 100:0:0:1::/64 Dummy IPv6 Prefix: False
+    assert_equal(false, IPAddr.new('100:0:0:1::/64').globally_reachable?)
+    assert_equal(false, IPAddr.new('100:0:0:1::').globally_reachable?)
+    assert_equal(false, IPAddr.new('100::1:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001::/23 IETF Protocol Assignments: False
+    assert_equal(false, IPAddr.new('2001::/23').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:1ff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001::/32 TEREDO: N/A
+    assert_equal(false, IPAddr.new('2001::/32').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:0:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:1::1/128 Port Control Protocol Anycast: True
+    assert_equal(true , IPAddr.new('2001:1::1').globally_reachable?)
+    # 2001:1::2/128 Traversal Using Relays around NAT Anycast: True
+    assert_equal(true , IPAddr.new('2001:1::2').globally_reachable?)
+    # 2001:1::3/128 DNS-SD Service Registration Protocol Anycast: True
+    assert_equal(true , IPAddr.new('2001:1::3').globally_reachable?)
+    # 2001:2::/48 Benchmarking: False
+    assert_equal(false, IPAddr.new('2001:2::/48').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:2::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:2:0:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:3::/32 AMT: True
+    assert_equal(true , IPAddr.new('2001:3::/32').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:3::').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:3:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:4:112::/48 AS112-v6: True
+    assert_equal(true , IPAddr.new('2001:4:112::/48').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:4:112::').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:4:112:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:20::/28 ORCHIDv2: True
+    assert_equal(true , IPAddr.new('2001:20::/28').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:20::').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:2f:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:30::/28 Drone Remote ID Protocol Entity Tags (DETs) Prefix: True
+    assert_equal(true , IPAddr.new('2001:30::/28').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:30::').globally_reachable?)
+    assert_equal(true , IPAddr.new('2001:3f:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2001:db8::/32 Documentation: False
+    assert_equal(false, IPAddr.new('2001:db8::/32').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:db8::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:db8:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2002::/16 6to4: N/A
+    assert_equal(false, IPAddr.new('2002::/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('2002::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 2620:4f:8000::/48 Direct Delegation AS112 Service: True
+    assert_equal(true , IPAddr.new('2620:4f:8000::/48').globally_reachable?)
+    assert_equal(true , IPAddr.new('2620:4f:8000::').globally_reachable?)
+    assert_equal(true , IPAddr.new('2620:4f:8000:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 3fff::/20 Documentation: False
+    assert_equal(false, IPAddr.new('3fff::/20').globally_reachable?)
+    assert_equal(false, IPAddr.new('3fff::').globally_reachable?)
+    assert_equal(false, IPAddr.new('3fff:fff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # 5f00::/16 Segment Routing (SRv6) SIDs: False
+    assert_equal(false, IPAddr.new('5f00::/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('5f00::').globally_reachable?)
+    assert_equal(false, IPAddr.new('5f00:ffff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # fc00::/7 Unique-Local: False
+    assert_equal(false, IPAddr.new('fc00::/7').globally_reachable?)
+    assert_equal(false, IPAddr.new('fc00::').globally_reachable?)
+    assert_equal(false, IPAddr.new('fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    # fe80::/10 Link-Local Unicast: False
+    assert_equal(false, IPAddr.new('fe80::/10').globally_reachable?)
+    assert_equal(false, IPAddr.new('fe80::').globally_reachable?)
+    assert_equal(false, IPAddr.new('febf:ffff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+
+    # Public controls
+    assert_equal(true,  IPAddr.new('8.8.8.8').globally_reachable?)
+    assert_equal(true,  IPAddr.new('1.1.1.1').globally_reachable?)
+    assert_equal(true,  IPAddr.new('8.0.0.0/8').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:4860:4860::8888').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2606:4700::/32').globally_reachable?)
+
+    # Just outside the blocks
+    assert_equal(true,  IPAddr.new('1.0.0.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('9.255.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('11.0.0.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('100.63.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('100.128.0.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('172.15.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('172.32.0.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('191.255.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('192.0.1.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('198.17.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('198.20.0.0').globally_reachable?)
+    assert_equal(true,  IPAddr.new('239.255.255.255').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2000::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:200::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:db7:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:db9::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2003::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('3ffe:ffff:ffff:ffff:ffff:ffff:ffff:ffff').globally_reachable?)
+    assert_equal(true,  IPAddr.new('3fff:1000::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('64:ff9b::1:0:0:0').globally_reachable?)
+
+    # The most specific block decides
+    assert_equal(false, IPAddr.new('192.0.0.11').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.8/31').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.8/30').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:1::4').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:1::/126').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:1ff::').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:3:1::').globally_reachable?)
+
+    # Terminated rows have no value: 192.88.99.0/24 is not in another block,
+    # 2001:10::/28 is inside 2001::/23
+    assert_equal(true,  IPAddr.new('192.88.99.1').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.88.99.0/24').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:10::1').globally_reachable?)
+
+    # Supernets of the blocks
+    assert_equal(false, IPAddr.new('0.0.0.0/0').globally_reachable?)
+    assert_equal(false, IPAddr.new('10.0.0.0/7').globally_reachable?)
+    assert_equal(false, IPAddr.new('192.0.0.0/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('198.0.0.0/8').globally_reachable?)
+    assert_equal(false, IPAddr.new('128.0.0.0/1').globally_reachable?)
+    assert_equal(false, IPAddr.new('::/0').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001::/16').globally_reachable?)
+    assert_equal(false, IPAddr.new('2000::/3').globally_reachable?)
+    assert_equal(false, IPAddr.new('fc00::/6').globally_reachable?)
+
+    # IPv4-mapped addresses are judged as their IPv4 address
+    assert_equal(true,  IPAddr.new('::ffff:8.8.8.8').globally_reachable?)
+    assert_equal(true,  IPAddr.new('::ffff:8.0.0.0/104').globally_reachable?)
+    assert_equal(true,  IPAddr.new('::ffff:192.0.0.9').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:10.0.0.1').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:192.0.0.8').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:10.0.0.0/103').globally_reachable?)
+    assert_equal(false, IPAddr.new('::ffff:0.0.0.0/96').globally_reachable?)
+    assert_equal(false, IPAddr.new('::fffe:0:0/95').globally_reachable?)
+
+    # Global unicast addresses with 0xffff in group 5 are not IPv4-mapped
+    assert_equal(false, IPAddr.new('2001:db8:1:1:0:ffff:808:808').globally_reachable?)
+    assert_equal(true,  IPAddr.new('2001:4860:1:1:0:ffff:a00:1').globally_reachable?)
+
+    # Other forms that carry an IPv4 address follow the IPv6 registry
+    assert_equal(true,  IPAddr.new('64:ff9b::10.0.0.1').globally_reachable?)
+    assert_equal(false, IPAddr.new('2002:a00:1::').globally_reachable?)
+    assert_equal(false, IPAddr.new('2001:0:4136:e378:8000:63bf:f5ff:fffe').globally_reachable?)
+  end
+
   def test_hash
     a1 = IPAddr.new('192.168.2.0')
     a2 = IPAddr.new('192.168.2.0')

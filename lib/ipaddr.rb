@@ -85,6 +85,73 @@ class IPAddr
     \z
   }xi
 
+  # Table _internally_ used by IPAddr#globally_reachable?: the address
+  # blocks of the IANA IPv4 Special-Purpose Address Registry, each with
+  # its "Globally Reachable" value.  Rows marked N/A are false.
+  GLOBALLY_REACHABLE_IPV4 = [
+    # [network address, prefix length, globally reachable]
+    [0x00000000,  8, false], # 0.0.0.0/8 This network (RFC 791)
+    [0x00000000, 32, false], # 0.0.0.0/32 This host on this network (RFC 1122)
+    [0x0a000000,  8, false], # 10.0.0.0/8 Private-Use (RFC 1918)
+    [0x64400000, 10, false], # 100.64.0.0/10 Shared Address Space (RFC 6598)
+    [0x7f000000,  8, false], # 127.0.0.0/8 Loopback (RFC 1122)
+    [0xa9fe0000, 16, false], # 169.254.0.0/16 Link Local (RFC 3927)
+    [0xac100000, 12, false], # 172.16.0.0/12 Private-Use (RFC 1918)
+    [0xc0000000, 24, false], # 192.0.0.0/24 IETF Protocol Assignments (RFC 6890)
+    [0xc0000000, 29, false], # 192.0.0.0/29 IPv4 Service Continuity Prefix (RFC 7335)
+    [0xc0000008, 32, false], # 192.0.0.8/32 IPv4 dummy address (RFC 7600)
+    [0xc0000009, 32, true ], # 192.0.0.9/32 Port Control Protocol Anycast (RFC 7723)
+    [0xc000000a, 32, true ], # 192.0.0.10/32 Traversal Using Relays around NAT Anycast (RFC 8155)
+    [0xc00000aa, 32, false], # 192.0.0.170/32 NAT64/DNS64 Discovery (RFC 8880)
+    [0xc00000ab, 32, false], # 192.0.0.171/32 NAT64/DNS64 Discovery (RFC 8880)
+    [0xc0000200, 24, false], # 192.0.2.0/24 Documentation (TEST-NET-1) (RFC 5737)
+    [0xc01fc400, 24, true ], # 192.31.196.0/24 AS112-v4 (RFC 7535)
+    [0xc034c100, 24, true ], # 192.52.193.0/24 AMT (RFC 7450)
+    # 192.88.99.0/24 was terminated on 2015-03 and has no classification
+    [0xc0586302, 32, false], # 192.88.99.2/32 6a44-relay anycast address (RFC 6751)
+    [0xc0a80000, 16, false], # 192.168.0.0/16 Private-Use (RFC 1918)
+    [0xc0af3000, 24, true ], # 192.175.48.0/24 Direct Delegation AS112 Service (RFC 7534)
+    [0xc6120000, 15, false], # 198.18.0.0/15 Benchmarking (RFC 2544)
+    [0xc6336400, 24, false], # 198.51.100.0/24 Documentation (TEST-NET-2) (RFC 5737)
+    [0xcb007100, 24, false], # 203.0.113.0/24 Documentation (TEST-NET-3) (RFC 5737)
+    [0xf0000000,  4, false], # 240.0.0.0/4 Reserved (RFC 1112)
+    [0xffffffff, 32, false], # 255.255.255.255/32 Limited Broadcast (RFC 8190)
+  ].freeze
+
+  # Table _internally_ used by IPAddr#globally_reachable?: the address
+  # blocks of the IANA IPv6 Special-Purpose Address Registry, each with
+  # its "Globally Reachable" value.  Rows marked N/A are false.
+  GLOBALLY_REACHABLE_IPV6 = [
+    # [network address, prefix length, globally reachable]
+    [0x0000_0000_0000_0000_0000_0000_0000_0001, 128, false], # ::1/128 Loopback Address (RFC 4291)
+    [0x0000_0000_0000_0000_0000_0000_0000_0000, 128, false], # ::/128 Unspecified Address (RFC 4291)
+    [0x0000_0000_0000_0000_0000_ffff_0000_0000,  96, false], # ::ffff:0:0/96 IPv4-mapped Address (RFC 4291)
+    [0x0064_ff9b_0000_0000_0000_0000_0000_0000,  96, true ], # 64:ff9b::/96 IPv4-IPv6 Translat. (RFC 6052)
+    [0x0064_ff9b_0001_0000_0000_0000_0000_0000,  48, false], # 64:ff9b:1::/48 IPv4-IPv6 Translat. (RFC 8215)
+    [0x0100_0000_0000_0000_0000_0000_0000_0000,  64, false], # 100::/64 Discard-Only Address Block (RFC 6666)
+    [0x0100_0000_0000_0001_0000_0000_0000_0000,  64, false], # 100:0:0:1::/64 Dummy IPv6 Prefix (RFC 9780)
+    [0x2001_0000_0000_0000_0000_0000_0000_0000,  23, false], # 2001::/23 IETF Protocol Assignments (RFC 2928)
+    [0x2001_0000_0000_0000_0000_0000_0000_0000,  32, false], # 2001::/32 TEREDO (RFC 4380), N/A in the registry
+    [0x2001_0001_0000_0000_0000_0000_0000_0001, 128, true ], # 2001:1::1/128 Port Control Protocol Anycast (RFC 7723)
+    [0x2001_0001_0000_0000_0000_0000_0000_0002, 128, true ], # 2001:1::2/128 Traversal Using Relays around NAT Anycast (RFC 8155)
+    [0x2001_0001_0000_0000_0000_0000_0000_0003, 128, true ], # 2001:1::3/128 DNS-SD Service Registration Protocol Anycast (RFC 9665)
+    [0x2001_0002_0000_0000_0000_0000_0000_0000,  48, false], # 2001:2::/48 Benchmarking (RFC 5180)
+    [0x2001_0003_0000_0000_0000_0000_0000_0000,  32, true ], # 2001:3::/32 AMT (RFC 7450)
+    [0x2001_0004_0112_0000_0000_0000_0000_0000,  48, true ], # 2001:4:112::/48 AS112-v6 (RFC 7535)
+    # 2001:10::/28 was terminated on 2014-03 and has no classification
+    [0x2001_0020_0000_0000_0000_0000_0000_0000,  28, true ], # 2001:20::/28 ORCHIDv2 (RFC 7343)
+    [0x2001_0030_0000_0000_0000_0000_0000_0000,  28, true ], # 2001:30::/28 Drone Remote ID Protocol Entity Tags (DETs) Prefix (RFC 9374)
+    [0x2001_0db8_0000_0000_0000_0000_0000_0000,  32, false], # 2001:db8::/32 Documentation (RFC 3849)
+    [0x2002_0000_0000_0000_0000_0000_0000_0000,  16, false], # 2002::/16 6to4 (RFC 3056), N/A in the registry
+    [0x2620_004f_8000_0000_0000_0000_0000_0000,  48, true ], # 2620:4f:8000::/48 Direct Delegation AS112 Service (RFC 7534)
+    [0x3fff_0000_0000_0000_0000_0000_0000_0000,  20, false], # 3fff::/20 Documentation (RFC 9637)
+    [0x5f00_0000_0000_0000_0000_0000_0000_0000,  16, false], # 5f00::/16 Segment Routing (SRv6) SIDs (RFC 9602)
+    [0xfc00_0000_0000_0000_0000_0000_0000_0000,   7, false], # fc00::/7 Unique-Local (RFC 4193)
+    [0xfe80_0000_0000_0000_0000_0000_0000_0000,  10, false], # fe80::/10 Link-Local Unicast (RFC 4291)
+  ].freeze
+
+  private_constant :GLOBALLY_REACHABLE_IPV4, :GLOBALLY_REACHABLE_IPV6
+
   # Generic IPAddr related error. Exceptions raised in this class should
   # inherit from Error.
   class Error < ArgumentError; end
@@ -440,6 +507,61 @@ class IPAddr
       raise AddressFamilyError, "unsupported address family"
     end
   end
+
+  # Returns true if the ipaddr is globally reachable according to the
+  # "Globally Reachable" column of the IANA IPv4 and IPv6 Special-Purpose
+  # Address Registries (RFC 8190), as read on 2026-11-21:
+  #
+  # - https://www.iana.org/assignments/iana-ipv4-special-registry/
+  # - https://www.iana.org/assignments/iana-ipv6-special-registry/
+  #
+  # An address is judged by the most specific registry block that
+  # contains it, so 192.0.0.9 (True) is globally reachable while the
+  # rest of 192.0.0.0/24 (False) is not.  Blocks whose value is N/A
+  # (6to4 2002::/16, Teredo 2001::/32) are not globally reachable, and an
+  # address in no registry block is.  A network is globally reachable
+  # only when every address in it is.  IPv4 addresses in the IPv4-mapped
+  # IPv6 address range are judged as the IPv4 address they map.
+  #
+  # This reports the IANA classification only.  It does not check
+  # whether the address is advertised in routing, and it is not by
+  # itself a check against server-side request forgery: other forms
+  # that carry an IPv4 address (NAT64 64:ff9b::/96, 6to4, Teredo,
+  # IPv4-compatible ::a.b.c.d) are judged as IPv6 addresses.
+  def globally_reachable?
+    case @family
+    when Socket::AF_INET
+      _globally_reachable?(GLOBALLY_REACHABLE_IPV4, @addr, prefix, 32)
+    when Socket::AF_INET6
+      if @addr >> 32 == 0xffff && prefix >= 96 # ::ffff:0:0/96, judged as its IPv4 address
+        _globally_reachable?(GLOBALLY_REACHABLE_IPV4, @addr & IN4MASK, prefix - 96, 32)
+      else
+        _globally_reachable?(GLOBALLY_REACHABLE_IPV6, @addr, prefix, 128)
+      end
+    else
+      raise AddressFamilyError, "unsupported address family"
+    end
+  end
+
+  def _globally_reachable?(table, addr, prefixlen, bits) # :nodoc:
+    reachable = true
+    longest = -1
+    table.each do |network, length, value|
+      if length <= prefixlen
+        # A block that contains this network: the most specific one decides.
+        if network >> (bits - length) == addr >> (bits - length) && length > longest
+          reachable = value
+          longest = length
+        end
+      elsif !value && network >> (bits - prefixlen) == addr >> (bits - prefixlen)
+        # A block inside this network that is not globally reachable.
+        return false
+      end
+    end
+    reachable
+  end
+
+  private :_globally_reachable?
 
   # Returns true if the ipaddr is an IPv4-mapped IPv6 address.
   def ipv4_mapped?
