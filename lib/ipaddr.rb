@@ -699,6 +699,8 @@ class IPAddr
         prefixlen = mask.to_i
       when /\A\d+\z/
         raise InvalidPrefixError, "leading zeros in prefix"
+      when %r{/}
+        raise InvalidAddressError, "invalid mask #{mask}"
       else
         m = IPAddr.new(mask)
         if m.family != @family
